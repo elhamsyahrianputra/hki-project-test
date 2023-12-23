@@ -1,31 +1,38 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+@extends('layouts.auth')
+
+@section('style')
+    <style>
+        .authentication-wrapper.authentication-basic .authentication-inner {
+            max-width: 700px;
+            position: relative;
+        }
+    </style>
+@endsection
+
+@section('content')
+    <div class="text-center my-4">
+        <span class="bx bx-envelope bg-primary text-white inline-block rounded-circle p-2" style="font-size: 72px"></span>
     </div>
-
-    @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
-        </div>
-    @endif
-
-    <div class="mt-4 flex items-center justify-between">
-        <form method="POST" action="{{ route('verification.send') }}">
-            @csrf
-
-            <div>
-                <x-primary-button>
-                    {{ __('Resend Verification Email') }}
-                </x-primary-button>
-            </div>
-        </form>
-
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-
-            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('Log Out') }}
+    <div class="text-center">
+        <h2>Please verify your email address</h2>
+    </div>
+    <div class="text-center my-3">
+        <span>We have sent a verification link to <b>{{ auth()->user()->email }}</b>.</span>
+    </div>
+    <div class="text-center my-3">
+        <span class="d-block">Click on the link to complete the verification process.</span>
+        <span class="d-block">You Might need to <b>check to your spam folder</b></span>
+    </div>
+    <div class="d-flex justify-content-center gap-3 my-3">
+        <form action="/email/verification-notification" method="POST">
+        @csrf
+            <button type="submit" class="btn btn-primary">
+                Resend Verification Email
             </button>
         </form>
+        <form action="/logout" method="post">
+            @csrf
+            <button class="btn btn-outline-primary" type="submit" class="">Log Out <span class="d-inline-block h bx bx-chevron-right"></span></button>
+        </form>
     </div>
-</x-guest-layout>
+@endsection
